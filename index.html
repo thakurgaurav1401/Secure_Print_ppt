@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurePrint - Zero-Trust Printing</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Load Lucide Icons for aesthetic and clarity -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Base Styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background */
+            color: #e5e7eb; /* Light text */
+            overflow-x: hidden;
+        }
+
+        /* 1. Fluid Animated Background (CSS-only particles/circles) */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -10;
+        }
+
+        .circle {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(4, 180, 150, 0.2); /* Teal/Cyan glow */
+            animation: animate 25s linear infinite;
+            bottom: -150px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(4, 180, 150, 0.8);
+        }
+
+        .circle:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; animation-duration: 10s; }
+        .circle:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .circle:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; animation-duration: 15s; }
+        .circle:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .circle:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; animation-duration: 10s; }
+        .circle:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; animation-duration: 20s; }
+        .circle:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; animation-duration: 25s; }
+        .circle:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 35s; }
+        .circle:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 45s; }
+        .circle:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 11s; animation-duration: 11s; }
+
+        @keyframes animate {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+        }
+
+        /* Section Specific Styles */
+        .tech-icon {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 0 15px rgba(4, 180, 150, 0.5);
+        }
+        .tech-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(4, 180, 150, 1);
+        }
+
+        .stat-card {
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(4, 180, 150, 0.3);
+        }
+
+        /* Custom animation for the padlock icon */
+        @keyframes pulse {
+            0% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.8; transform: scale(1); }
+        }
+        .padlock-pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* Style for the bar chart items */
+        .bar-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .bar {
+            width: 25%;
+            background: linear-gradient(to top, #04b496, #00ffc8);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.8s ease-out;
+        }
+
+        /* Title text gradient */
+        .main-title {
+            background: linear-gradient(90deg, #00ffc8, #04b496, #00ffc8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient-shift 4s ease infinite;
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Fluid Animated Background -->
+    <div class="background-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <main class="relative z-10 p-4 md:p-12 lg:p-20">
+
+        <!-- Page 1: SecurePrint - Hero Section -->
+        <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center p-8">
+            <div class="text-white padlock-pulse mb-8">
+                <!-- Lock Icon SVG (Replacing the image) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-[#00ffc8]">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+            <h1 class="main-title text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4 uppercase tracking-tight">
+                CyberSafe Print
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 font-light mb-12">
+                100% Trust Printing for Public Spaces.
+            </p>
+            <div class="flex flex-col space-y-2 text-gray-400 text-sm">
+                <p>Team: Earth Saver</p>
+                <p>Members: Vishnu • Gaurav • Ravi Keshari • Harshit </p>
+            </div>
+            <a href="#problem" class="mt-16 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-gray-900 bg-[#00ffc8] hover:bg-[#04b496] transition duration-300 shadow-xl shadow-[#00ffc8]/30">
+                <span data-lucide="arrow-down" class="w-5 h-5 mr-2"></span>
+                Explore The Challenge
+            </a>
+        </section>
+
+        <!-- Page 2: Problem Statement -->
+        <section id="problem" class="py-20 md:py-32 border-t border-gray-800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-[#00ffc8] border-b-2 border-[#04b496]/50 pb-4">
+                The Problem
+            </h2>
+            <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                
+                <div class="bg-gray-800/30 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#00ffc8] transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <span data-lucide="alert-octagon" class="w-8 h-8 text-red-400 mr-3 flex-shrink-0"></span>
+                        <h3 class="text-2xl font-semibold text-white">Critical Breach Point</h3>
+                    </div>
+                    <p class="text-gray-300">Confidential documents printed at cybercafes are often saved in "Downloads" or print history, creating a major security hole.</p>
+                </div>
+
+                <div class="bg-gray-800/30 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#00ffc8] transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <span data-lucide="eye-off" class="w-8 h-8 text-yellow-400 mr-3 flex-shrink-0"></span>
+                        <h3 class="text-2xl font-semibold text-white">Zero Privacy</h3>
+                    </div>
+                    <p class="text-gray-300">Shop owners and subsequent customers can access these sensitive files easily from public computers.</p>
+                </div>
+                
+                <div class="bg-gray-800/30 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#00ffc8] transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <span data-lucide="trending-up" class="w-8 h-8 text-purple-400 mr-3 flex-shrink-0"></span>
+                        <h3 class="text-2xl font-semibold text-white">The Stat</h3>
+                    </div>
+                    <p class="text-gray-300">**61% of organizations** have experienced data losses due to unsecure printing practices.</p>
+                </div>
+                
+                <div class="bg-gray-800/30 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#00ffc8] transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <span data-lucide="hand" class="w-8 h-8 text-[#00ffc8] mr-3 flex-shrink-0"></span>
+                        <h3 class="text-2xl font-semibold text-white">No Control</h3>
+                    </div>
+                    <p class="text-gray-300">Once you hand over the USB drive or email the file, you lose ownership and control of your data.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Page 3: Data Breach Cost Chart (Visualizing the urgency) -->
+        <section id="cost-analysis" class="py-20 md:py-32 border-t border-gray-800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-[#00ffc8] border-b-2 border-[#04b496]/50 pb-4">
+                Rising Cost of Data Breaches
+            </h2>
+            <p class="text-center text-gray-400 mb-8">Global average cost of a data breach (in Millions USD). *Source: IBM Cost of a Data Breach Report*</p>
+            
+            <div class="max-w-4xl mx-auto p-6 bg-gray-900/40 rounded-xl shadow-2xl border border-gray-700">
+                <div class="bar-container items-end">
+                    <!-- Bar Data: 2020: $3.86M (Height: 80%) -->
+                    <div class="flex flex-col items-center w-1/4">
+                        <span class="text-sm font-bold text-[#00ffc8] mb-2">$3.86M</span>
+                        <div class="bar h-[138px]" style="height: 80%;"></div>
+                        <span class="text-gray-400 mt-2">2020</span>
+                    </div>
+
+                    <!-- Bar Data: 2021: $4.24M (Height: 90%) -->
+                    <div class="flex flex-col items-center w-1/4">
+                        <span class="text-sm font-bold text-[#00ffc8] mb-2">$4.24M</span>
+                        <div class="bar h-[155px]" style="height: 90%;"></div>
+                        <span class="text-gray-400 mt-2">2021</span>
+                    </div>
+
+                    <!-- Bar Data: 2022: $4.35M (Height: 95%) -->
+                    <div class="flex flex-col items-center w-1/4">
+                        <span class="text-sm font-bold text-[#00ffc8] mb-2">$4.35M</span>
+                        <div class="bar h-[163px]" style="height: 95%;"></div>
+                        <span class="text-gray-400 mt-2">2022</span>
+                    </div>
+
+                    <!-- Bar Data: 2023: $4.45M (Height: 100%) -->
+                    <div class="flex flex-col items-center w-1/4">
+                        <span class="text-sm font-bold text-[#00ffc8] mb-2">$4.45M</span>
+                        <div class="bar h-[172px]" style="height: 100%;"></div>
+                        <span class="text-gray-400 mt-2">2023</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Page 4: Solution: Zero-Trust Workflow -->
+        <section id="solution" class="py-20 md:py-32 border-t border-gray-800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-[#00ffc8] border-b-2 border-[#04b496]/50 pb-4">
+                The Solution: Zero-Trust Workflow
+            </h2>
+            <p class="text-center text-3xl font-light text-gray-300 mb-12">Scan. Upload. Print. Vanish.</p>
+
+            <div class="max-w-5xl mx-auto grid md:grid-cols-4 gap-8">
+                
+                <!-- Step 1: QR Code -->
+                <div class="stat-card bg-gray-800/30 p-6 rounded-2xl text-center border border-gray-700">
+                    <span data-lucide="qrcode" class="w-12 h-12 text-[#00ffc8] mx-auto mb-4"></span>
+                    <h3 class="text-xl font-semibold mb-2">1. Scan QR Code</h3>
+                    <p class="text-sm text-gray-400">Customer scans a unique QR code at the cybercafe terminal.</p>
+                </div>
+                
+                <!-- Step 2: Direct Upload -->
+                <div class="stat-card bg-gray-800/30 p-6 rounded-2xl text-center border border-gray-700">
+                    <span data-lucide="upload-cloud" class="w-12 h-12 text-[#00ffc8] mx-auto mb-4"></span>
+                    <h3 class="text-xl font-semibold mb-2">2. Direct Upload</h3>
+                    <p class="text-sm text-gray-400">Document is uploaded via mobile web to a secure cloud bucket.</p>
+                </div>
+
+                <!-- Step 3: Encrypted View -->
+                <div class="stat-card bg-gray-800/30 p-6 rounded-2xl text-center border border-gray-700">
+                    <span data-lucide="lock" class="w-12 h-12 text-[#00ffc8] mx-auto mb-4"></span>
+                    <h3 class="text-xl font-semibold mb-2">3. Encrypted View</h3>
+                    <p class="text-sm text-gray-400">Owner sees only Filename and Page Count. The content is hidden.</p>
+                </div>
+
+                <!-- Step 4: Ephemeral Storage -->
+                <div class="stat-card bg-gray-800/30 p-6 rounded-2xl text-center border border-gray-700">
+                    <span data-lucide="wand-2" class="w-12 h-12 text-[#00ffc8] mx-auto mb-4"></span>
+                    <h3 class="text-xl font-semibold mb-2">4. Vanish</h3>
+                    <p class="text-sm text-gray-400">File is auto-deleted immediately after the print job completes.</p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Page 5: Technology Stack -->
+        <section id="tech-stack" class="py-20 md:py-32 border-t border-gray-800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-[#00ffc8] border-b-2 border-[#04b496]/50 pb-4">
+                Technology Stack
+            </h2>
+            <div class="max-w-6xl mx-auto grid md:grid-cols-3 lg:grid-cols-5 gap-8">
+                
+                <!-- Frontend -->
+                <div class="tech-icon bg-gray-800/40 p-6 rounded-xl text-center">
+                    <span data-lucide="smartphone" class="w-10 h-10 text-white mx-auto mb-3"></span>
+                    <h3 class="text-lg font-semibold text-[#00ffc8] mb-1">Frontend (Mobile)</h3>
+                    <p class="text-xs text-gray-400">Next.js Web App for mobile uploads without installation.</p>
+                </div>
+
+                <!-- Backend -->
+                <div class="tech-icon bg-gray-800/40 p-6 rounded-xl text-center">
+                    <span data-lucide="server" class="w-10 h-10 text-white mx-auto mb-3"></span>
+                    <h3 class="text-lg font-semibold text-[#00ffc8] mb-1">Backend</h3>
+                    <p class="text-xs text-gray-400">Node.js & Socket.io for real-time bi-directional communication.</p>
+                </div>
+                
+                <!-- Desktop Agent -->
+                <div class="tech-icon bg-gray-800/40 p-6 rounded-xl text-center">
+                    <span data-lucide="printer" class="w-10 h-10 text-white mx-auto mb-3"></span>
+                    <h3 class="text-lg font-semibold text-[#00ffc8] mb-1">Desktop Agent</h3>
+                    <p class="text-xs text-gray-400">Flutter app running on the cafe terminal to handle local printer drivers.</p>
+                </div>
+
+                <!-- Security/Encryption -->
+                <div class="tech-icon bg-gray-800/40 p-6 rounded-xl text-center col-span-2 md:col-span-1 lg:col-span-1">
+                    <span data-lucide="key-round" class="w-10 h-10 text-white mx-auto mb-3"></span>
+                    <h3 class="text-lg font-semibold text-[#00ffc8] mb-1">Encryption</h3>
+                    <p class="text-xs text-gray-400">AES-256 Client-Side Encryption ensuring data is unreadable in transit.</p>
+                </div>
+
+                <!-- Core Security Concepts -->
+                <div class="tech-icon bg-gray-800/40 p-6 rounded-xl text-center lg:col-span-1">
+                    <span data-lucide="shield-check" class="w-10 h-10 text-white mx-auto mb-3"></span>
+                    <h3 class="text-lg font-semibold text-[#00ffc8] mb-1">Zero-Trust</h3>
+                    <p class="text-xs text-gray-400">The underlying security philosophy driving the entire architecture.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 6 & 7: Architecture & Key Security Features (Combined) -->
+        <section id="architecture" class="py-20 md:py-32 border-t border-gray-800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-[#00ffc8] border-b-2 border-[#04b496]/50 pb-4">
+                Architecture & Security Pillars
+            </h2>
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-12">
+                
+                <!-- Architecture Flow -->
+                <div class="lg:col-span-2 bg-gray-900/40 p-8 rounded-xl shadow-2xl border border-gray-700">
+                    <h3 class="text-3xl font-semibold text-white mb-6 flex items-center">
+                        <span data-lucide="workflow" class="w-6 h-6 mr-3 text-[#00ffc8]"></span>
+                        Data Flow Overview
+                    </h3>
+                    <ol class="list-decimal space-y-4 ml-6 text-gray-300">
+                        <li class="pl-2">**Client (Mobile Web App):** Encrypts the file using AES-256 before upload.</li>
+                        <li class="pl-2">**Cloud (AWS S3):** Stores the encrypted blob temporarily. <span class="text-sm font-semibold text-red-400 block mt-1">Lifecycle policy set to 'Delete after 5 mins'.</span></li>
+                        <li class="pl-2">**Socket Server:** Signals the Flutter App on the terminal that a "New Job is Ready".</li>
+                        <li class="pl-2">**Terminal (Electron App):** Downloads the encrypted blob, decrypts **in memory**, and pipes the stream directly to the local printer driver.</li>
+                    </ol>
+                    <p class="mt-6 text-sm text-gray-400 italic">No files ever hit the terminal's disk.</p>
+                </div>
+
+                <!-- Key Security Features -->
+                <div class="lg:col-span-1 space-y-8">
+                    <div class="bg-gray-800/30 p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#00ffc8] transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <span data-lucide="flame" class="w-8 h-8 text-orange-400 mr-3"></span>
+                            <h4 class="text-xl font-semibold text-white">Auto-Destruct (Hot Data)</h4>
+                        </div>
+                        <p class="text-sm text-gray-300">A rigid TTL (Time-To-Live) policy ensures no file remains on the server for more than **5 minutes**. Maximize ephemerality.</p>
+                    </div>
+                    <div class="bg-gray-800/30 p-6 rounded-xl shadow-lg border border-gray-700 hover:border-[#00ffc8] transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <span data-lucide="eye-off" class="w-8 h-8 text-[#00ffc8] mr-3"></span>
+                            <h4 class="text-xl font-semibold text-white">Blind Processing</h4>
+                        </div>
+                        <p class="text-sm text-gray-300">The cybercafe owner never possesses the file. The print process is automated, bypassing the local "Downloads" folder entirely.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Page 8: Business Model -->
+        <section id="business" class="py-20 md:py-32 border-t border-gray-800">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-[#00ffc8] border-b-2 border-[#04b496]/50 pb-4">
+                Business Model
+            </h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                
+                <!-- Freemium for Cafes -->
+                <div class="bg-gray-900/40 p-8 rounded-2xl border-4 border-double border-[#04b496] shadow-xl text-center">
+                    <span data-lucide="coffee" class="w-12 h-12 text-[#00ffc8] mx-auto mb-4"></span>
+                    <h3 class="text-2xl font-bold text-white mb-4">Freemium for Cafes</h3>
+                    <ul class="text-left space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <span data-lucide="check-circle" class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0"></span>
+                            <p><strong>Free Tier:</strong> Up to 50 secure prints/day. Allows rapid adoption.</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span data-lucide="zap" class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0"></span>
+                            <p><strong>Pro Tier ($10/month):</strong> Unlimited prints, audit logs, and priority support for busy centers.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Micro-Transaction for Users -->
+                <div class="bg-gray-900/40 p-8 rounded-2xl border-4 border-double border-[#04b496] shadow-xl text-center">
+                    <span data-lucide="indian-rupee" class="w-12 h-12 text-[#00ffc8] mx-auto mb-4"></span>
+                    <h3 class="text-2xl font-bold text-white mb-4">User Micro-Transaction</h3>
+                    <ul class="text-left space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <span data-lucide="lock-keyhole" class="w-5 h-5 text-red-400 mr-2 mt-1 flex-shrink-0"></span>
+                            <p><strong>Premium Secure Print:</strong> Users pay a small convenience fee (e.g., ₹2).</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span data-lucide="clipboard-check" class="w-5 h-5 text-green-400 mr-2 mt-1 flex-shrink-0"></span>
+                            <p>Includes "High Security Mode" with a verified deletion report for peace of mind.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 9 & 10: Resources & Conclusion -->
+        <section id="conclusion" class="py-20 md:py-32 border-t border-gray-800 text-center">
+            
+            <div class="max-w-xl mx-auto bg-gray-900/50 p-10 rounded-3xl shadow-2xl border border-gray-700">
+                <span data-lucide="battery-charging" class="w-16 h-16 text-[#00ffc8] mx-auto mb-6"></span>
+                <h3 class="text-4xl font-bold main-title mb-4">Ready to Build</h3>
+                <p class="text-xl text-gray-300 mb-8">
+                    We have the stack and the plan. Just need the caffeine.
+                </p>
+                <div class="text-sm text-gray-400 space-y-1">
+                    <p><strong>Hosting/Storage:</strong> Vercel (Frontend), AWS EC2 (Backend), AWS S3 (Blobs)</p>
+                    <p><strong>Collab:</strong> GitHub for version control</p>
+                    <p><strong>Demo:</strong> One local printer for live demonstration</p>
+                </div>
+            </div>
+
+            <div class="mt-20">
+                <h2 class="text-5xl font-extrabold main-title mb-4">
+                    SecurePrint
+                </h2>
+                <p class="text-2xl font-light text-gray-300">Making Public Printing Private.</p>
+                <p class="mt-8 text-lg text-[#04b496] font-semibold">Thank You!</p>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Script to initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+        
+        // Simple JS to update bar chart heights on load for a smooth transition effect
+        document.addEventListener('DOMContentLoaded', () => {
+            const bars = [
+                { id: 0, height: '80%' }, // 2020: $3.86M
+                { id: 1, height: '90%' }, // 2021: $4.24M
+                { id: 2, height: '95%' }, // 2022: $4.35M
+                { id: 3, height: '100%' }, // 2023: $4.45M
+            ];
+
+            bars.forEach((bar, index) => {
+                const element = document.querySelector(`.bar-container > div:nth-child(${index + 1}) .bar`);
+                if (element) {
+                    element.style.height = bar.height;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
